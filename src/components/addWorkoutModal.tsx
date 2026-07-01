@@ -14,19 +14,20 @@ const AddWorkoutModal = ({ visible, onClose }: Props) => {
 
 
     return (
-        <Modal
-            visible={visible}
-            animationType='slide'
-            presentationStyle='fullScreen'  // IOS 
-            onRequestClose={onClose}
-        >
-            <SafeAreaView style={{ flex: 1 }}>
-                <Text>Modal</Text>
-                <Pressable onPress={onClose}>
-                    <Ionicons name="close" size={24} color="black" />
-                </Pressable>
-            </SafeAreaView>
-        </Modal>
+      <Modal
+        visible={visible}
+        animationType="slide"
+        presentationStyle="fullScreen" // IOS
+        onRequestClose={onClose}
+        statusBarTranslucent
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <Text>Modal</Text>
+          <Pressable onPress={onClose}>
+            <Ionicons name="close" size={24} color="black" />
+          </Pressable>
+        </SafeAreaView>
+      </Modal>
     );
 }
 

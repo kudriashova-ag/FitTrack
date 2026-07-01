@@ -11,6 +11,7 @@ export type Exercise = {
   reps: number;
   weight?: number;
   durationSec?: number;
+  orderIndex: number;
 };
 
 export type Workout = {
@@ -22,4 +23,5 @@ export type Workout = {
   scheduledAt: string;
   completedAt?: string;
   notes?: string;
+ 
 };
