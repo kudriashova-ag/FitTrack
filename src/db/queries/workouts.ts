@@ -4,11 +4,11 @@ import { db } from "../client";
 import { exercises, NewExercise, NewWorkout, workouts } from "../schema";
 
 // READ
-const getAllWorkouts = () => {
+export const getAllWorkouts = () => {
   return db.select().from(workouts).orderBy(desc(workouts.scheduledAt));
 };
 
-const getWorkoutsByCategory = (category: WorkoutCategory) => {
+export const getWorkoutsByCategory = (category: WorkoutCategory) => {
   return db
     .select()
     .from(workouts)
@@ -16,7 +16,7 @@ const getWorkoutsByCategory = (category: WorkoutCategory) => {
     .orderBy(desc(workouts.scheduledAt));
 };
 
-const getWorkoutById = (id: string) => {
+export const getWorkoutById = (id: string) => {
   return db
     .select()
     .from(workouts)
@@ -25,7 +25,7 @@ const getWorkoutById = (id: string) => {
     .get();
 };
 
-const getExercisesByWorkoutId = (workoutId: string) => {
+export const getExercisesByWorkoutId = (workoutId: string) => {
   return db
     .select()
     .from(exercises)

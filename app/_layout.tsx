@@ -5,6 +5,7 @@ import { Drawer } from 'expo-router/drawer';
 import DrawerContent from '@/src/components/DrawerContent';
 import { runMigrations } from '@/src/db/migrations';
 import { seedDatabase } from '@/src/db/seed';
+import QueryProvider from '@/src/providers/QueryProvider';
 
 const RootLayout = () => {
 
@@ -23,7 +24,8 @@ const RootLayout = () => {
   }, []);
 
 
-    return (
+  return (
+    <QueryProvider>
       <GestureHandlerRootView>
         <Drawer
           drawerContent={(props) => <DrawerContent {...props} />}
@@ -37,7 +39,8 @@ const RootLayout = () => {
           <Drawer.Screen name="settings" />
         </Drawer>
       </GestureHandlerRootView>
-    );
+    </QueryProvider>
+  );
 }
 
 const styles = StyleSheet.create({})

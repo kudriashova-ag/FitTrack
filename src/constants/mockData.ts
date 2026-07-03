@@ -8,7 +8,7 @@ import type { Workout } from "../types/workout";
 export const MOCK_WORKOUTS: Workout[] = [
   {
     id: "1",
-    title: "Силове тренування A",
+    title: "Тестове тренування A",
     category: "strength",
     duration: 60,
     scheduledAt: "2025-01-20T09:00:00",

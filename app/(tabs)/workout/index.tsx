@@ -1,14 +1,17 @@
 import AddWorkoutModal from '@/src/components/addWorkoutModal';
 import WorkoutCard from '@/src/components/WorkoutCard';
+import { COLORS } from '@/src/constants/theme';
+import { useWorkouts } from '@/src/hooks/useWorkouts';
 import { useUIStore } from '@/src/store/uiStore';
 import { useWorkoutStore } from '@/src/store/workoutStore';
 import type { Workout } from '@/src/types/workout';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 
 const HomeScreen = () => {
-    const { workouts } = useWorkoutStore();
+  
+  const { data: workouts, isLoading, isError } = useWorkouts();
 
     const router = useRouter();
 
@@ -21,21 +24,38 @@ const HomeScreen = () => {
 
     return (
       <View>
-        <Text>Home</Text>
+        <Text>Home {"\n"} gdfgdfgdfg</Text>
 
-        <FlatList
-          data={workouts}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <WorkoutCard workout={item} onPress={handleWorkoutPress} />
-          )}
-        />
+        {isLoading ? (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text>Loading...</Text>
+          </View>
+        ) : isError ? (
+          <View style={styles.center}>
+            <Text>Error</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={workouts}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <WorkoutCard workout={item} onPress={handleWorkoutPress} />
+            )}
+          />
+        )}
 
         <AddWorkoutModal visible={isModalOpen} onClose={closeModal} />
       </View>
     );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+})
 
 export default HomeScreen;
