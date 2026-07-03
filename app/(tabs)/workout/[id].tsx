@@ -1,9 +1,11 @@
+import DraggableExerciseList from '@/src/components/DraggableExerciseList';
 import { MOCK_WORKOUTS } from '@/src/constants/mockData';
 import { BORDER_RADIUS, COLORS, FONT_SIZE, SHADOW, SPACING } from '@/src/constants/theme';
+import { useWorkoutStore } from '@/src/store/workoutStore';
 import { WorkoutCategory } from '@/src/types/workout';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 const CATEGORY_COLORS: Record<WorkoutCategory, string> = {
@@ -13,8 +15,10 @@ const CATEGORY_COLORS: Record<WorkoutCategory, string> = {
 };
 
 const WorkoutDetailScreen = () => {
-    const { id } = useLocalSearchParams<{ id: string }>();
-    const workout = MOCK_WORKOUTS.find(workout => workout.id === id);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const workout = useWorkoutStore(state => state.workouts.find(w => w.id === id));
+  const reorderExercises = useWorkoutStore(state => state.reorderExercises);  
+  const [isReordering, setIsReordering] = useState(false);
 
     if (!workout) {
       return (
@@ -29,16 +33,6 @@ const WorkoutDetailScreen = () => {
 
    return (
     <View style={styles.container}>
-      {/* <Stack.Screen
-        options={{
-          title: workout.title,
-          headerRight: () => (
-            <Pressable onPress={handleDelete} hitSlop={8}>
-              <Ionicons name="trash-outline" size={22} color={COLORS.error} />
-            </Pressable>
-          ),
-        }}
-      /> */}
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
@@ -65,22 +59,11 @@ const WorkoutDetailScreen = () => {
         {workout.exercises.length > 0 ? (
           <>
             <Text style={styles.sectionTitle}>Програма</Text>
-            {workout.exercises.map((exercise, index) => (
-              <View key={exercise.id} style={styles.exerciseRow}>
-                <View style={[styles.num, { backgroundColor: accentColor + '15' }]}>
-                  <Text style={[styles.numText, { color: accentColor }]}>{index + 1}</Text>
-                </View>
-                <View style={styles.exerciseInfo}>
-                  <Text style={styles.exerciseName}>{exercise.name}</Text>
-                  <Text style={styles.exerciseMeta}>
-                    {exercise.sets} × {exercise.reps}
-                    {exercise.weight      ? ` · ${exercise.weight} кг`      : ''}
-                    {exercise.durationSec ? ` · ${exercise.durationSec} с`  : ''}
-                  </Text>
-                </View>
-                <Ionicons name="ellipse-outline" size={22} color={COLORS.border} />
-              </View>
-            ))}
+            <DraggableExerciseList
+              exercises={workout.exercises}
+              accentColor={accentColor}
+              onReorder={(exercises) => reorderExercises(workout.id, exercises)}
+            />
           </>
         ) : (
           <View style={styles.noExercises}>
@@ -194,39 +177,6 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     marginBottom: SPACING.md,
   },
-  exerciseRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.md,
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
-    gap: SPACING.md,
-    ...SHADOW.sm,
-  },
-  num: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  numText: { fontSize: FONT_SIZE.sm, fontWeight: "700" },
-  exerciseInfo: { flex: 1, gap: 3 },
-  exerciseName: {
-    fontSize: FONT_SIZE.md,
-    fontWeight: "500",
-    color: COLORS.textPrimary,
-  },
-  exerciseMeta: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
-
-  noExercises: { alignItems: "center", paddingVertical: SPACING.xl },
-  noExercisesText: {
-    fontSize: FONT_SIZE.sm,
-    color: COLORS.textTertiary,
-    textAlign: "center",
-    lineHeight: 20,
-  },
 
   startBtn: {
     flexDirection: "row",
@@ -238,6 +188,14 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xl,
   },
   startBtnText: { color: "#fff", fontSize: FONT_SIZE.md, fontWeight: "600" },
+
+  noExercises: { alignItems: "center", paddingVertical: SPACING.xl },
+  noExercisesText: {
+    fontSize: FONT_SIZE.sm,
+    color: COLORS.textTertiary,
+    textAlign: "center",
+    lineHeight: 20,
+  },
 });
 
 
