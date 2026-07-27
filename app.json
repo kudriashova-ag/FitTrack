@@ -26,6 +26,11 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-sensors", {
+          "motionPermission": "FitTrack рахує кроки"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",

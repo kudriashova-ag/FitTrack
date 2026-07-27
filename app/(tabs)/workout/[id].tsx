@@ -1,5 +1,4 @@
 import DraggableExerciseList from '@/src/components/DraggableExerciseList';
-import { MOCK_WORKOUTS } from '@/src/constants/mockData';
 import { BORDER_RADIUS, COLORS, FONT_SIZE, SHADOW, SPACING } from '@/src/constants/theme';
 import { useWorkoutStore } from '@/src/store/workoutStore';
 import { WorkoutCategory } from '@/src/types/workout';
@@ -18,7 +17,6 @@ const WorkoutDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const workout = useWorkoutStore(state => state.workouts.find(w => w.id === id));
   const reorderExercises = useWorkoutStore(state => state.reorderExercises);  
-  const [isReordering, setIsReordering] = useState(false);
 
     if (!workout) {
       return (

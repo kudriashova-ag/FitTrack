@@ -1,41 +1,51 @@
-import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState, useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Pedometer } from "expo-sensors";
 
-const ProgressScreen = () => {
-    const scale = useSharedValue(1);
+export default function ProgressScreen() {
+  const [isPedometerAvailable, setIsPedometerAvailable] = useState("checking");
+  const [pastStepCount, setPastStepCount] = useState(0);
+  const [currentStepCount, setCurrentStepCount] = useState(0);
 
-    const animatedStyle = useAnimatedStyle(() => { 
-        return {
-            transform: [{scale: scale.value}]
-        }
-    })
+  const subscribe = async () => {
+    const isAvailable = await Pedometer.isAvailableAsync();
+    setIsPedometerAvailable(String(isAvailable));
 
-    const handlePress = () => { 
-        if(scale.value === 1) {
-            scale.value = withSpring(0.5, {stiffness: 1500, damping: 50, mass: 10});
-        } else {
-            scale.value = withTiming(1, {duration: 1000});
-        }
+    if (isAvailable) {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(end.getDate() - 1);
+
+      const pastStepCountResult = await Pedometer.getStepCountAsync(start, end);
+      if (pastStepCountResult) {
+        setPastStepCount(pastStepCountResult.steps);
+      }
+
+      return Pedometer.watchStepCount((result) => {
+        setCurrentStepCount(result.steps);
+      });
     }
+  };
 
+  useEffect(() => {
+    const subscription = subscribe();
+    return () => subscription && subscription.remove();
+  }, []);
 
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Animated.View style={[styles.box, animatedStyle]} />
-            <Button title="Zoom" onPress={handlePress} />
-        </SafeAreaView>
-    );
+  return (
+    <View style={styles.container}>
+      <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
+      <Text>Steps taken in the last 24 hours: {pastStepCount}</Text>
+      <Text>Walk! And watch this go up: {currentStepCount}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    box: {
-        width: 100,
-        height: 100,
-        backgroundColor: 'dodgerblue',
-        marginBottom: 20
-    }
-})
-
-export default ProgressScreen;
+  container: {
+    flex: 1,
+    marginTop: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

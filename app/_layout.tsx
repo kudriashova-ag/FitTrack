@@ -32,7 +32,6 @@ const RootLayout = () => {
           screenOptions={{
             drawerType: "front",
             headerShown: false,
-            swipeEdgeWidth: 100,
           }}
         >
           <Drawer.Screen name="(tabs)" />
