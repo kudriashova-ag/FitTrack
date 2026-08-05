@@ -6,6 +6,10 @@ import DrawerContent from '@/src/components/DrawerContent';
 import { runMigrations } from '@/src/db/migrations';
 import { seedDatabase } from '@/src/db/seed';
 import QueryProvider from '@/src/providers/QueryProvider';
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync(); // Prevents the splash screen from auto-hiding
+
 
 const RootLayout = () => {
 
@@ -17,6 +21,9 @@ const RootLayout = () => {
       }
       catch (error) {
         console.error("DB init error:", error);
+      }
+      finally {
+         SplashScreen.hideAsync(); // Hides the splash screen after initialization
       }
     }
 
