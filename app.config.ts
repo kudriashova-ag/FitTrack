@@ -16,7 +16,7 @@ const EAS_PROJECT_ID = "96df61dd-9b10-43fd-b632-685e4f3688b3"; // реальни
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config, // app.json
   name: appName,
-  slug: "fit-track",
+  slug: "FitTrack",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png", // iOS + Android запасний варіант
@@ -72,5 +72,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     apiUrl: process.env.API_URL || "https://api.fittrack.com", // URL API сервера бекенду
     variant: APP_VARIANT,
+  },
+  runtimeVersion: { policy: "fingerprint" },
+  updates: {
+    url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
   },
 });

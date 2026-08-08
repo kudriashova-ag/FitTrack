@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
     return (
       <View>
-        <Text>Home {"\n"} gdfgdfgdfg</Text>
+        <Text>Home {"\n"} Screen</Text>
 
         {isLoading ? (
           <View style={styles.center}>
