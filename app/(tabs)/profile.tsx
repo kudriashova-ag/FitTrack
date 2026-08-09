@@ -4,39 +4,12 @@ import * as Notifications from 'expo-notifications';
 import { SchedulableTriggerInputTypes } from 'expo-notifications';
 
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+
 
 
 
 const ProfileScreen = () => {
     const [done, setDone] = useState(false); // стан для відстеження, чи було виконано тренування
-
-    useEffect(() => { 
-        const permissionNotification = async () => { 
-            const { granted } = await Notifications.requestPermissionsAsync();
-            if (!granted) {
-                Alert.alert('Немає дозвлу на надсилання сповіщень');
-                return;
-            }
-        }
-        permissionNotification();
-    }, [])
-
-    // слухач для отримання сповіщень
-    useEffect(() => { 
-        const subscription = Notifications.addNotificationResponseReceivedListener((res) => { 
-            const data = res.notification.request.content.data;
-            Alert.alert('Отримано сповіщення', JSON.stringify(data))
-        });
-        return () => subscription.remove();
-    }, [])
 
     const schedule = async () => { 
         if (done) {
